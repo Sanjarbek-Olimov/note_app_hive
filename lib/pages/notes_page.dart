@@ -3,8 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-
-import '../services/shared_preference.dart';
+import '../services/hive_service.dart';
 import '../services/notes_model.dart';
 import 'package:easy_localization/easy_localization.dart';
 
@@ -19,14 +18,13 @@ class NotesPage extends StatefulWidget {
 
 class _NotesPageState extends State<NotesPage> {
   bool isLight = true;
-  bool isLoading = true;
   String _chosenValue = "EN";
   List<Note> listofNotes = [];
   List<Note> listofNotestoDelete = [];
   TextEditingController noteController = TextEditingController();
 
   // #create_notes
-  void _createNotes() async {
+  void _createNotes() {
     String text = noteController.text.toString().trim();
     listofNotes.add(Note(date: DateTime.now().toString(), notes: text));
     listofNotes.sort((a, b) => b.date!.compareTo(a.date!));
@@ -34,39 +32,31 @@ class _NotesPageState extends State<NotesPage> {
   }
 
   // #store_notes
-  void _storeNotes() async {
+  void _storeNotes() {
     String notes = Note.encode(listofNotes);
-    await Prefs.storeNotes(notes);
+    HiveDB.storeNotes(notes);
   }
 
   // #laod_everything_saved
-  Future<void> loadEverything() async {
-    listofNotes = Note.decode(await Prefs.loadNotes() as String);
+  void loadEverything() {
+    listofNotes = Note.decode(HiveDB.loadNotes());
     listofNotes.sort((a, b) => b.date!.compareTo(a.date!));
-    isLight = (await Prefs.loadMode())!;
-    _chosenValue = (await Prefs.loadLang())!;
-    setState(() {
-      isLoading = false;
-    });
+    isLight = HiveDB.loadMode();
+    _chosenValue = HiveDB.loadLang();
   }
 
   // #dark_light_mode_saver
-  void _changeMode() async {
+  void _changeMode() {
     setState(() {
       isLight = !isLight;
     });
-    await Prefs.storeMode(isLight);
+    HiveDB.storeMode(isLight);
   }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    Timer(
-        const Duration(milliseconds: 500),
-        () => setState(() {
-              isLoading = false;
-            }));
     loadEverything();
     setState(() {});
   }
@@ -188,9 +178,8 @@ class _NotesPageState extends State<NotesPage> {
 
   @override
   Widget build(BuildContext context) {
-    return isLoading
-        ? const Scaffold()
-        : Scaffold(
+    return Scaffold(
+            resizeToAvoidBottomInset: false,
             backgroundColor:
                 isLight ? Colors.grey.shade100 : Colors.grey.shade900,
             appBar: AppBar(
@@ -235,7 +224,7 @@ class _NotesPageState extends State<NotesPage> {
                           context.setLocale(const Locale('uz', 'UZ'));
                         }
                       });
-                      await Prefs.storeLang(_chosenValue);
+                      HiveDB.storeLang(_chosenValue);
                     },
                   ),
                 ),
