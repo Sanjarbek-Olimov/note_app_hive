@@ -43,8 +43,6 @@ class MyApp extends StatelessWidget {
         NotesPage.id: (context) => const NotesPage()
       },
     );
-
   }
 }
-
 

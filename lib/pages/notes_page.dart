@@ -39,10 +39,12 @@ class _NotesPageState extends State<NotesPage> {
 
   // #laod_everything_saved
   void loadEverything() {
-    listofNotes = Note.decode(HiveDB.loadNotes());
+    if(HiveDB.loadNotes()!=null && HiveDB.loadMode()!=null && HiveDB.loadLang()!=null){
+      listofNotes = Note.decode(HiveDB.loadNotes()!);
+      isLight = HiveDB.loadMode()!;
+      _chosenValue = HiveDB.loadLang()!;
+    }
     listofNotes.sort((a, b) => b.date!.compareTo(a.date!));
-    isLight = HiveDB.loadMode();
-    _chosenValue = HiveDB.loadLang();
   }
 
   // #dark_light_mode_saver

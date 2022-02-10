@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.shared_preference">
    <application
-        android:label="Note App"
+        android:label="Note App Hive"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

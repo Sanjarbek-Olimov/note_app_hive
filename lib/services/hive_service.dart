@@ -8,7 +8,7 @@ class HiveDB{
     box.put("mode", isLight);
   }
 
-  static bool loadMode(){
+  static bool? loadMode(){
     return box.get("mode");
   }
 
@@ -16,7 +16,7 @@ class HiveDB{
     box.put("lang", lang);
   }
 
-  static String loadLang(){
+  static String? loadLang(){
     return box.get("lang");
   }
 
@@ -24,7 +24,7 @@ class HiveDB{
     box.put("notes", listofNotes);
   }
 
-  static String loadNotes(){
+  static String? loadNotes(){
     return box.get("notes");
   }
 
