@@ -8,16 +8,16 @@ class HiveDB{
     box.put("mode", isLight);
   }
 
-  static bool? loadMode(){
-    return box.get("mode");
+  static bool loadMode(){
+    return box.get("mode", defaultValue: true);
   }
 
   static void storeLang(String lang) async{
     box.put("lang", lang);
   }
 
-  static String? loadLang(){
-    return box.get("lang");
+  static String loadLang(){
+    return box.get("lang", defaultValue: "EN");
   }
 
   static void storeNotes(String listofNotes) async{
